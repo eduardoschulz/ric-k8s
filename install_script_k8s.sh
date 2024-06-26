@@ -19,7 +19,7 @@ echo "Kubectl installed. Installing containerd"
 sleep 2
 
 #installing containerd
-curl -LO https://github.com/containerd/containerd/releases/download/v1.7.16/containerd-1.7.16-linux-amd64.tar.gz | sudo tar Cxzvf /usr/local containerd-1.7.16-linux-amd64.tar.gz
+curl -LO https://github.com/containerd/containerd/releases/download/v1.7.16/containerd-1.7.16-linux-amd64.tar.gz && sudo tar Cxzvf /usr/local containerd-1.7.16-linux-amd64.tar.gz
 curl -LO https://raw.githubusercontent.com/containerd/containerd/main/containerd.service 
 sleep 30
 sudo mv containerd.service /etc/systemd/system/containerd.service
