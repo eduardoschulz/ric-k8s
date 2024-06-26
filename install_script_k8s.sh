@@ -9,7 +9,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 
-sudo apt update && sudo apt install curl
+sudo apt update && sudo apt install curl conntrack
 curl -LO https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl
 curl -LO https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl.sha256
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
@@ -57,5 +57,5 @@ echo "Kubeadm and Kubelet installed. Setting up system..."
 sleep 2
 
 sudo sed -i 's/\#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf #enable ipv4 forwarding
-sudo sed -i 's/0/1/g' /proc/sys/net/ipv4/ip_forward #enable ipv4 forwarding
+sudo echo "1" > /proc/sys/net/ipv4/ip_forward #enable ipv4 forwarding
 sudo kubeadm init --config config.yaml
