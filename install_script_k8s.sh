@@ -57,4 +57,4 @@ echo "Kubeadm and Kubelet installed. Setting up system..."
 sleep 2
 
 sudo sed -i 's/\#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf #enable ipv4 forwarding
-sudo kubeadm init config.yaml
+sudo kubeadm init --config config.yaml
