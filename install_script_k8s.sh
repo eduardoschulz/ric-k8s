@@ -2,9 +2,14 @@
 
 
 #TODO check if root
-#TODO check if ubuntu 24.04LTS
+#TODmO check if ubuntu 24.04LTS
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
 
-apt install curl
+
+sudo apt install curl
 curl -LO https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl
 curl -LO https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl.sha256
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
