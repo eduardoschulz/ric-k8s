@@ -41,7 +41,7 @@ sleep 2
 curl -L "https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-amd64-v1.3.0.tgz" | sudo tar -C /opt/cni/bin -xz
 curl -L "https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.30.0/crictl-v1.30.0-linux-amd64.tar.gz" | sudo tar -C /usr/local/bin -xz
 sudo curl -L --remote-name-all https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/{kubeadm,kubelet}
-sudo mv {kubeadm,kubelet} /usr/local/bin/{kubeadm,kubelet}
+sudo mv {kubeadm,kubelet} /usr/local/bin/
 sudo chmod +x /usr/local/bin/{kubeadm,kubelet}
 
 
