@@ -59,3 +59,10 @@ sleep 2
 sudo sed -i 's/\#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf #enable ipv4 forwarding
 sudo echo "1" > /proc/sys/net/ipv4/ip_forward #enable ipv4 forwarding
 sudo kubeadm init --config config.yaml
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+
