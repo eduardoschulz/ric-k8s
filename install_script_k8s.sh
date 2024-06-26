@@ -9,18 +9,20 @@ if [ "$EUID" -ne 0 ]
 fi
 
 
-sudo apt install curl
+sudo apt update && sudo apt install curl
 curl -LO https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl
 curl -LO https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl.sha256
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 # TODO exit se check falhar
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-sudo apt update
+echo "Kubectl installed. Installing containerd"
+sleep 2
 
 #installing containerd
-wget https://github.com/containerd/containerd/releases/download/v1.7.16/containerd-1.7.16-linux-amd64.tar.gz | sudo tar Cxzvf /usr/local containerd-1.7.16-linux-amd64.tar.gz
-
-curl -LO https://raw.githubusercontent.com/containerd/containerd/main/containerd.service && sudo mv containerd.service /etc/systemd/system/containerd.service
+curl -LO https://github.com/containerd/containerd/releases/download/v1.7.16/containerd-1.7.16-linux-amd64.tar.gz | sudo tar Cxzvf /usr/local containerd-1.7.16-linux-amd64.tar.gz
+curl -LO https://raw.githubusercontent.com/containerd/containerd/main/containerd.service 
+sleep 30
+sudo mv containerd.service /etc/systemd/system/containerd.service
 sudo systemctl daemon-reload && sudo systemctl enable --now containerd
 
 #install runc
