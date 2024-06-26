@@ -21,10 +21,10 @@ sleep 2
 #installing containerd
 curl -LO https://github.com/containerd/containerd/releases/download/v1.7.16/containerd-1.7.16-linux-amd64.tar.gz && sudo tar Cxzvf /usr/local containerd-1.7.16-linux-amd64.tar.gz
 curl -LO https://raw.githubusercontent.com/containerd/containerd/main/containerd.service 
-sleep 30
 sudo mv containerd.service /etc/systemd/system/containerd.service
 sudo systemctl daemon-reload && sudo systemctl enable --now containerd
-
+echo "Containerd installed. Installing runc"
+sleep 2
 #install runc
 wget https://github.com/opencontainers/runc/releases/download/v1.1.13/runc.amd64
 sudo install -m 755 runc.amd64 /usr/local/sbin/runc
@@ -34,10 +34,14 @@ wget https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni
 sudo mkdir -p /opt/cni/bin
 sudo tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.5.1.tgz
 
+echo "Runc installed. Installing cni plugins"
+sleep 2
+
 #installing kubeadm
 curl -L "https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-amd64-v1.3.0.tgz" | sudo tar -C /opt/cni/bin -xz
 curl -L "https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.30.0/crictl-v1.30.0-linux-amd64.tar.gz" | sudo tar -C /usr/local/bin -xz
 sudo curl -L --remote-name-all https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/{kubeadm,kubelet}
+sudo mv {kubeadm,kubelet} /usr/local/bin/{kubeadm,kubelet}
 sudo chmod +x /usr/local/bin/{kubeadm,kubelet}
 
 
