@@ -9,7 +9,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 
-sudo apt update && sudo apt install curl conntrack
+sudo apt update && sudo apt install curl conntrack socat
 curl -LO https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl
 curl -LO https://dl.k8s.io/release/v1.30.2/bin/linux/amd64/kubectl.sha256
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
@@ -32,16 +32,17 @@ sudo install -m 755 runc.amd64 /usr/local/sbin/runc
 echo "Runc installed. Installing cni plugins"
 sleep 2
 #install cni plugins 
-wget https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz
-sudo mkdir -p /opt/cni/bin
-sudo tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.5.1.tgz
+#wget https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz
+#sudo tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.5.1.tgz
+curl -L "https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz" | sudo tar -C /opt/cni/bin -xz
 
-
+sudo containerd config default > /etc/containerd/config.toml
+sleep 2
 
 echo "Cni plugins installed. Installing kubeadm and kubelet"
 sleep 2
 #installing kubeadm
-curl -L "https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-amd64-v1.3.0.tgz" | sudo tar -C /opt/cni/bin -xz
+#curl -L "https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-amd64-v1.3.0.tgz" | sudo tar -C /opt/cni/bin -xz
 curl -L "https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.30.0/crictl-v1.30.0-linux-amd64.tar.gz" | sudo tar -C /usr/local/bin -xz
 sudo curl -L --remote-name-all https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/{kubeadm,kubelet}
 sudo mv {kubeadm,kubelet} /usr/local/bin/
