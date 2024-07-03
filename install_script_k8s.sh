@@ -34,6 +34,7 @@ sleep 2
 #install cni plugins 
 #wget https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz
 #sudo tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.5.1.tgz
+sudo mkdir -p /opt/cni/bin
 curl -L "https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz" | sudo tar -C /opt/cni/bin -xz
 
 sudo containerd config default > /etc/containerd/config.toml
