@@ -37,9 +37,9 @@ sleep 2
 sudo mkdir -p /opt/cni/bin
 curl -L "https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz" | sudo tar -C /opt/cni/bin -xz
 
-sudo containerd config default > /etc/containerd/config.toml
-sleep 2
-
+sudo -i
+mkdir -p /etc/containerd/ && containerd config default | tee /etc/containerd/config.toml > /dev/null
+systemctl daemon-reload && systemctl start containerd
 echo "Cni plugins installed. Installing kubeadm and kubelet"
 sleep 2
 #installing kubeadm
@@ -59,10 +59,28 @@ systemctl status kubelet.service | head
 echo "Kubeadm and Kubelet installed. Setting up system..."
 sleep 10
 
-sudo swapoff -a
-sudo sed -i 's/\#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf #enable ipv4 forwarding
-sudo echo "1" > /proc/sys/net/ipv4/ip_forward #enable ipv4 forwarding
-sudo kubeadm init --config config.yaml
+sudo su
+swapoff -a
+sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
+#setting up kernel modules
+cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
+overlay
+br_netfilter
+EOF
+modprobe overlay
+modprobe br_netfilter
+cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+sysctl --system
+
+
+#sudo sed -i 's/\#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf #enable ipv4 forwarding
+#sudo echo "1" > /proc/sys/net/ipv4/ip_forward #enable ipv4 forwarding
+kubeadm init --config config.yaml
+exit
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
