@@ -53,9 +53,11 @@ sudo mkdir -p /etc/systemd/system/kubelet.service.d
 curl -sSL "https://raw.githubusercontent.com/kubernetes/release/v0.16.2/cmd/krel/templates/latest/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:/usr/local/bin:g" | sudo tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 sudo systemctl daemon-reload && sudo systemctl enable --now kubelet
+systemctl status kubelet.service | head
 echo "Kubeadm and Kubelet installed. Setting up system..."
-sleep 2
+sleep 10
 
+sudo swapoff -a
 sudo sed -i 's/\#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf #enable ipv4 forwarding
 sudo echo "1" > /proc/sys/net/ipv4/ip_forward #enable ipv4 forwarding
 sudo kubeadm init --config config.yaml
